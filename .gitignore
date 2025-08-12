@@ -1,0 +1,6 @@
+venv/
+social_media_api/db.sqlite3
+social_media_api/social_media_api/__pycache__/
+social_media_api/user/__pycache__/
+social_media_api/comment/__pycache__/
+social_media_api/follow/__pycache__/

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'post',
     'rest_framework',
     'rest_framework_simplejwt',
+     'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -131,7 +132,6 @@ AUTH_USER_MODEL = 'user.CustomUser'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
     ]
 }
 

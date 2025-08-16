@@ -1,6 +1,11 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
+from post.views import PostViewSet
 
+
+router = routers.DefaultRouter()
+router.register(r'post_data', PostViewSet)
 
 urlpatterns = [
-    # Example: path('posts/', views.PostListView.as_view(), name='post-list'),
+    path('', include(router.urls)),
 ]

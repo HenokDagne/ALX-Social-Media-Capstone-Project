@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+import requests
 from user.models import CustomUser
 from user.serializers import CustomUserSerializer, UpdateProfileSerializer
 from rest_framework import viewsets
@@ -106,3 +107,31 @@ class ProfileRetrieveUpdateView(viewsets.ModelViewSet):
     def get_object(self):
         return self.request.user
 
+
+class PasswordManagementView(viewsets.ViewSet):
+    pass
+
+
+
+def google_logout(request):
+    # Revoke the Google token (if available)
+    social_account = request.user.socialaccount_set.filter(provider='google').first()
+    if social_account:
+        token = social_account.socialtoken_set.first()
+        if token:
+            revoke_url = 'https://accounts.google.com/o/oauth2/revoke'
+            params = {'token': token.token}
+            requests.post(revoke_url, params=params)
+
+    # Log out the user from Django
+    logout(request)
+    return redirect('/')
+
+from rest_framework.views import APIView
+from django.http import JsonResponse
+
+class Home(APIView):
+    def get(self, request):
+        message = "Home page"
+        return render(request, 'home.html', {'message': message})
+        

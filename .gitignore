@@ -10,5 +10,5 @@ social_media_api/user/migrations/
 social_media_api/comment/migrations/
 social_media_api/follow/migrations/
 social_media_api/post/migrations/
-social_media_api/.env
 .env
+social_media_api/.env

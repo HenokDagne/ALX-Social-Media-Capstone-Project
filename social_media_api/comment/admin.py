@@ -5,6 +5,6 @@ from comment.models import Comment
 class CommentAdmin(admin.ModelAdmin):
 	list_display = ('id', 'post', 'user', 'content', 'created_at')
 	readonly_fields = ('created_at',)
-	search_fields = ('content', 'user__username')
+	search_fields = ('content', 'user__username', 'post__title')
 
 

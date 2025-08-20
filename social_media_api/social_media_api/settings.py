@@ -146,7 +146,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),      # Access token valid for 5 minutes
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),      # Access token valid for 1 hour
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),        # Refresh token valid for 1 day
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,

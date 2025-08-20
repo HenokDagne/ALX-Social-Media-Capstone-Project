@@ -10,99 +10,66 @@ from user.models import CustomUser
 
 class FollowViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()
-    permission_classes = [AllowAny]
     serializer_class = FollowSerializer
-
-    @action(detail=False, methods=['post', 'get'], url_path='following')
+    permission_classes = [IsAuthenticated]
+    
+    @action(detail=False, methods=['post'], url_path='follow_user')
     def follow_user(self, request):
-        user = request.user   # the logged-in user (follower)
+        user = request.user
         following_id = request.data.get('following_id')
-
+        
         if not following_id:
-            return Response(
-                {"error": "Following ID is required."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        # Prevent self-following
-        if str(user.id) == str(following_id):
-            return Response(
-                {"error": "You cannot follow yourself."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        # Check if the user exists
+            return Response({"error": "following_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if user.id == int(following_id):
+            return Response({"error": "You cannot follow yourself"}, status=status.HTTP_400_BAD_REQUEST)
+        
         try:
             following = CustomUser.objects.get(id=following_id)
         except CustomUser.DoesNotExist:
-            return Response(
-                {"error": "User not found."},
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        # Create or get follow relation
-        follow, created = Follow.objects.get_or_create(
-            follower=user,
-            following=following
-        )
+        follow, created = Follow.objects.get_or_create(follower=user, following=following)
 
         if created:
-            status_msg = "Now following"
-            status_code = status.HTTP_201_CREATED
-        else:
-            status_msg = "Already following"
-            status_code = status.HTTP_200_OK
-
-        # Correct follower/following counts
-        number_of_followers = following.followers.count()  # how many follow *this user*
-        number_of_following = user.following.count()       # how many the logged-in user follows
-
-        return Response({
-            "status": status_msg,
-            "follower": user.username,
-            "following": following.username,
-            "number_of_followers": number_of_followers,
-            "number_of_following": number_of_following,
-        }, status=status_code)
-
-    @action(detail=False, methods=['delete'], url_path='unfollow')
+            return Response({"status": f"Now following {following.username}"}, status=status.HTTP_201_CREATED)
+        
+        return Response({"status": f"You are already following {following.username}"}, status=status.HTTP_200_OK)
+    @action(detail=False, methods=['post', 'delete'], url_path="unfollow")
     def unfollow_user(self, request):
-        user = request.user  # the logged-in user (follower)
-        following_id = request.data.get('following_id')
+        user = request.user # logged-in user = follower
+        following_id = request.data.get("following_id")
 
         if not following_id:
-            return Response(
-                {"error": "Following ID is required."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        # Check if the user exists
+            return Response({"error": "following_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
         try:
-            following = CustomUser.objects.get(id=following_id)
-        except CustomUser.DoesNotExist:
-            return Response(
-                {"error": "User not found."},
-                status=status.HTTP_404_NOT_FOUND
-            )
-
-        # Delete follow relation
-        follow = Follow.objects.filter(follower=user, following=following)
-        if follow.exists():
+            follow = Follow.objects.get(follower=user, following_id=following_id)
             follow.delete()
-            status_msg = "Unfollowed"
-            status_code = status.HTTP_200_OK
-        else:
-            status_msg = "Not following"
-            status_code = status.HTTP_400_BAD_REQUEST
-
-        # Correct follower/following counts
-        number_of_followers = following.followers.count()  # how many follow *this user*
-        number_of_following = user.following.count()       # how many the logged-in user follows
-
+            return Response({"status": "Unfollowed successfully"}, status=status.HTTP_200_OK)
+        except Follow.DoesNotExist:
+            return Response({"error": "You are not following this user"}, status=status.HTTP_404_NOT_FOUND)
+        
+    # list my followers
+    @action(detail=False, methods=["get"], url_path="followers")
+    def get_followers(self, request):
+        user = request.user
+        followers = user.followers.all()
+        serializer = self.get_serializer(followers, many=True)
+        return Response(serializer.data)
+    # list who I am following
+    @action(detail=False, methods=["get"], url_path="following")
+    def get_following(self, request):
+        user = request.user
+        following = user.following.all()
+        serializer = self.get_serializer(following, many=True)
+        return Response(serializer.data)
+    @action(detail=False, methods=['get'], url_path="count_follow")
+    def get_following_and_followers_numbers(self, request):
+        user = request.user
+        followers_numbers = user.followers.count()
+        following_numbers = user.following.count()
         return Response({
-            "status": status_msg,
-            "follower": user.username,
-            "following": following.username,
-            "number_of_followers": number_of_followers,
-            "number_of_following": number_of_following,
-        }, status=status_code)
+            "followers": followers_numbers,
+            "following": following_numbers
+        })

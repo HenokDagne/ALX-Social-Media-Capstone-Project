@@ -13,7 +13,7 @@ class CustomUserAdmin(UserAdmin):
     add_fieldsets = UserAdmin.add_fieldsets + (
         (None, {'fields': ('phone_number', 'bio', 'profile_picture')}),
     )
-    list_display = UserAdmin.list_display + ('phone_number', 'bio', 'profile_picture')
+    list_display = UserAdmin.list_display + ('id','phone_number', 'bio', 'profile_picture')
     search_fields = ('email', 'username', 'phone_number', 'bio')
     ordering = ('email',)
     list_editable = ('phone_number', 'bio', 'profile_picture')

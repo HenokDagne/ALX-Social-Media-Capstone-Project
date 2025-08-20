@@ -10,7 +10,5 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'content', 'create_at', 'updated_at', 'user', 'image']
         read_only_fields = ['create_at', 'updated_at', 'user']
 
-    class Meta:
-        unique_together = ['follower', 'following']
 
     

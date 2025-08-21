@@ -183,13 +183,12 @@ SOCIALACCOUNT_PROVIDERS = {
        
     }
 }
-EMAIL_BACKEND = 'django.core.mail.backends.Console.EmailBackend'
-ACCOUNT_LOGIN_METHOD = {'email'}
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
-SOCIALACCOUNT_AUTO_SIGNUP = True
-SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
-SOCIALACCOUNT_EMAIL_REQUIRED = True
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'  # Redirect after successful login
+ACCOUNT_LOGOUT_REDIRECT_URL = ''
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-SOCIALACCOUNT_LOGIN_ON_GET = True
 
+
+ACCOUNT_EMAIL_VERIFICATION = 'none' # disable email verification
+
+SOCIALACCOUNT_ADAPTER = "user.adapters.CustomSocialAccountAdapter"

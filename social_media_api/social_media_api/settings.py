@@ -157,13 +157,13 @@ SIMPLE_JWT = {
 }
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'henokdagne19@gmail.com'
-EMAIL_HOST_PASSWORD = '<your_app_password>'  # Generate this in your Google Account security settings
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'henokdagne19@gmail.com'
+EMAIL_HOST_USER = env('GMAIL_USER')  # Use environment variable for email
+EMAIL_HOST_PASSWORD = env('GMAIL_PASSWORD')  # Use environment variable for email password
+DEFAULT_FROM_EMAIL = env('GMAIL_USER')
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -186,9 +186,9 @@ SOCIALACCOUNT_PROVIDERS = {
     },
       'github': {
         'APP': {
-            'client_id': env('GITHUB_CLIENT_ID'),
-            'secret': env('GITHUB_CLIENT_SECRET'),
-            
+            'client_id': env('OAUTH2_GITHUB_CLIENT_ID'),
+            'secret': env('OAUTH2_GITHUB_CLIENT_SECRET'),
+
         }
     }
 }

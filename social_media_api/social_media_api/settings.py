@@ -53,8 +53,10 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
     'django_filters',
 ]
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -181,6 +183,13 @@ SOCIALACCOUNT_PROVIDERS = {
             'secret': env('OAUTH2_GOOGLE_CLIENT_SECRET'),
         },
        
+    },
+      'github': {
+        'APP': {
+            'client_id': env('GITHUB_CLIENT_ID'),
+            'secret': env('GITHUB_CLIENT_SECRET'),
+            
+        }
     }
 }
 LOGIN_REDIRECT_URL = '/'  # Redirect after successful login

@@ -89,3 +89,15 @@ class LikeViewSet(viewsets.ModelViewSet):
 
         like.delete()
         return Response({"success": "Post unliked successfully."}, status=200)
+    
+from rest_framework import generics, permissions
+
+class FeedView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        # Get users that the current user is following
+        following_users = self.request.user.following.values_list('following', flat=True)
+        # Get posts from those users, ordered by created_at (most recent first)
+        return Post.objects.filter(user__in=following_users).order_by('-created_at')

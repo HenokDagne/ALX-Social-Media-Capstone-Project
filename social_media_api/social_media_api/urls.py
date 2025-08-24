@@ -33,4 +33,5 @@ urlpatterns = [
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     path('accounts/', include('allauth.urls')),
+    path('notifications/', include('notifications.urls')),
 ]

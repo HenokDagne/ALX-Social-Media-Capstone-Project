@@ -110,6 +110,39 @@
 
 ---
 
+## Follow Endpoints
+
+### Follow a User
+- **URL:** `/follow/follow_user/`
+- **Method:** POST
+- **Auth:** Bearer token required
+- **Body:**
+  ```json
+  {
+    "following_id": <user_id>
+  }
+  ```
+- **Response:**
+  - Success: `{ "status": "Now following <username>" }`
+  - Already following: `{ "status": "You are already following <username>" }`
+  - Error: `{ "error": "You cannot follow yourself" }` or `{ "error": "User not found" }`
+
+### Unfollow a User
+- **URL:** `/follow/unfollow/`
+- **Method:** POST or DELETE
+- **Auth:** Bearer token required
+- **Body:**
+  ```json
+  {
+    "following_id": <user_id>
+  }
+  ```
+- **Response:**
+  - Success: `{ "status": "Unfollowed successfully" }`
+  - Error: `{ "error": "You are not following this user" }`
+
+---
+
 ## Other Endpoints
 
 ### Google Logout

@@ -57,7 +57,7 @@ class LikeViewSet(viewsets.ModelViewSet):
     serializer_class = LikeSerializer
     permission_classes = [IsAuthenticated]
 
-    @action(detail=False, methods=['post'], url_path='like')
+    @action(detail=False, methods=['post'], url_path='user_like')
     def like(self, request):
         user = request.user
         post_id = request.data.get('post_id')
@@ -90,6 +90,13 @@ class LikeViewSet(viewsets.ModelViewSet):
         like.delete()
         return Response({"success": "Post unliked successfully."}, status=200)
     
+    @action(detail=False, methods=['get'], url_path='feed')
+    def count(self, request):
+        user = request.user
+        post = Post.objects.filter(pk=request.data.get('post_id'))
+        post_count = post.count()
+        return Response({"post_count": post_count}, status=200)
+
 from rest_framework import generics, permissions
 
 class FeedView(generics.ListAPIView):

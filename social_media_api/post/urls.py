@@ -4,9 +4,9 @@ from post.views import PostViewSet, PostFilterViewSet, LikeViewSet, FeedView
 
 
 router = routers.DefaultRouter()
-router.register(r'post_data', PostViewSet)
+router.register(r'', PostViewSet)
 router.register(r'post_filter', PostFilterViewSet, basename='post-filter')
-router.register(r'', LikeViewSet, basename='likes')
+router.register(r'like', LikeViewSet, basename='likes')
 
 urlpatterns = [
     path('', include(router.urls)),
